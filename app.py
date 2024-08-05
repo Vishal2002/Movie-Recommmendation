@@ -7,15 +7,11 @@ from dotenv import load_dotenv, dotenv_values
 load_dotenv() 
  
 
-print()
-
-# Initialize TMDb
 tmdb = TMDb()
-tmdb.api_key = os.getenv("API_KEY")  # Replace with your TMDb API key
+tmdb.api_key = os.getenv("API_KEY")
 tmdb.language = 'en'
 tmdb_movie = Movie()
 
-# Function to get movie recommendations
 def recommend(movie):
     recommendation = []
     movie_index = movies_df[movies_df['title'] == movie].index[0]
@@ -25,7 +21,7 @@ def recommend(movie):
         recommendation.append(movies_df.iloc[i[0]].title)
     return recommendation
 
-# Function to fetch movie poster URL
+
 def fetch_poster_url(movie_title):
     search_result = tmdb_movie.search(movie_title)
     if search_result:
@@ -36,34 +32,32 @@ def fetch_poster_url(movie_title):
         return full_path
     return None
 
-# Load the movie data
 movies_df = pd.read_csv('movies.csv')
 
-# Load the similarity matrix
+
 with open('similarity.pkl', 'rb') as f:
     similarity = pickle.load(f)
 
-# Extract the movie titles
 movies_list = movies_df['title'].values
 
-# Create the Streamlit app
+
 st.title('Movie Recommendation System')
 
-# Create a search bar with autocomplete
+
 selected_movie = st.selectbox(
     "Type or select a movie from the dropdown",
     movies_list
 )
 
-# Display the selected movie
+
 st.write('You selected:', selected_movie)
 
-# Get and display recommendations if a movie is selected
+
 if selected_movie:
     recommendations = recommend(selected_movie)
     st.write('Recommendations:')
     
-    # Create 5 columns
+
     cols = st.columns(4)
     
     for i, movie in enumerate(recommendations):
