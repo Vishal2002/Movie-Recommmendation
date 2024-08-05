@@ -60,9 +60,16 @@ if selected_movie:
 
     cols = st.columns(4)
     
-    for i, movie in enumerate(recommendations):
-        with cols[i]:
-            poster_url = fetch_poster_url(movie)
-            if poster_url:
-                st.image(poster_url, width=150)
-            st.write(f"{movie}")
+    if selected_movie:
+        recommendations = recommend(selected_movie)
+    if recommendations:
+        st.write('Recommendations:')
+        cols = st.columns(min(4, len(recommendations)))
+        for i, movie in enumerate(recommendations):
+            with cols[i % len(cols)]:
+                poster_url = fetch_poster_url(movie)
+                if poster_url:
+                    st.image(poster_url, width=150)
+                st.write(f"{movie}")
+    else:
+        st.write("No recommendations available.")
